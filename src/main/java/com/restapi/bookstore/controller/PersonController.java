@@ -10,7 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.http.HttpStatus;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,9 +31,11 @@ public class PersonController {
 
     @Operation(summary = "Find all people")
     @GetMapping(produces = {"application/json", "application/xml", "application/x-yaml"})
-    public ResponseEntity<?> findAll(@RequestParam(value = "page", defaultValue = "0") int page,
-                                     @RequestParam(value = "limit", defaultValue = "12") int limit,
-                                     @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+    public ResponseEntity<CollectionModel<PersonVO>> findAll(@RequestParam(value = "page",
+                                                                           defaultValue =
+                                                                                   "0") int page,
+                                                             @RequestParam(value = "limit", defaultValue = "12") int limit,
+                                                             @RequestParam(value = "direction", defaultValue = "asc") String direction) {
 
         var sortDirection = "desc".equalsIgnoreCase(
                 direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
@@ -46,17 +48,17 @@ public class PersonController {
                     person.getKey())).withSelfRel());
         });
 
-        return new ResponseEntity<>(assembler.toModel(persons), HttpStatus.OK);
+        return ResponseEntity.ok(CollectionModel.of(persons));
     }
 
     @Operation(summary = "Find people by firstName")
     @GetMapping(value = "/findPersonByName/{firstName}", produces = {"application/json",
                                                                      "application/xml",
                                                                      "application/x-yaml"})
-    public ResponseEntity<?> findPersonByName(@PathVariable("firstName") String firstName,
-                                              @RequestParam(value = "page", defaultValue = "0") int page,
-                                              @RequestParam(value = "limit", defaultValue = "12") int limit,
-                                              @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+    public ResponseEntity<CollectionModel<PersonVO>> findPersonByName(@PathVariable("firstName") String firstName,
+                                                                      @RequestParam(value = "page", defaultValue = "0") int page,
+                                                                      @RequestParam(value = "limit", defaultValue = "12") int limit,
+                                                                      @RequestParam(value = "direction", defaultValue = "asc") String direction) {
 
         var sortDirection = "desc".equalsIgnoreCase(
                 direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
@@ -69,7 +71,7 @@ public class PersonController {
                     person.getKey())).withSelfRel());
         });
 
-        return new ResponseEntity<>(assembler.toModel(persons), HttpStatus.OK);
+        return ResponseEntity.ok(CollectionModel.of(persons));
     }
 
     @Operation(summary = "Find people by your ID")

@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @JsonPropertyOrder({"id", "author", "launchDate", "price", "title"})
-public class BookVO extends RepresentationModel implements Serializable{
+public class BookVO extends RepresentationModel<BookVO> implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
